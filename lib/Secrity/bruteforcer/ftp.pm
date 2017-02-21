@@ -65,7 +65,7 @@ unless($ftp->stat){
 or print "Can't connect to $host: $@\n";
 }
 if( $ftp->login($user,$pwd)) {
-$result.= "$user $pwd \n";
+$result.= "$user $pwd";
 $ftp->quit;
 last;
 }
