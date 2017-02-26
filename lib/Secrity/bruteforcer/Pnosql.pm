@@ -19,6 +19,7 @@ my @hosts = qw(
 );
 
 my @usrs = qw();
+
 my @pws = qw(
     '123456',    'admin',      'root',         'toor!@#',
     'ftp',       'password',   '123123',       '123',
@@ -79,14 +80,18 @@ return 1 if $auth_result =~ /Authentication/;
 }
 
 sub checkredis {
+
  my ($host,$port,$timeout)=@_;
+
  my $comm='INFO\r\n';
  my $res='redis_version';
  return checkport($host,$port,$timeout,$comm,$res);
 
 }
 sub checkmemcache {
+
  my ($host,$port,$timeout)=@_;
+
  my $comm='stats\r\n';
  my $res='version';
  return checkport($host,$port,$timeout,$comm,$res);
