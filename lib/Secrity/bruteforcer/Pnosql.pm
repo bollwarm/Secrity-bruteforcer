@@ -112,13 +112,13 @@ my $connect = IO::Socket::INET->new(
 
 if($connect ) {
 
-my $data = 'binascii.a2b_hex("3a000000a741000000000000d40700000000000061646d696e2e24636d640000000000ffffffff130000001069736d6173746572000100000000")';
+my $data = hex2bin("3a000000a741000000000000d40700000000000061646d696e2e24636d640000000000ffffffff130000001069736d6173746572000100000000");
 $connect->send( $data, 0 );
 my $BUFFER_LENGTH = 1024;
 my $auth_result;
 $connect->recv( $auth_result, $BUFFER_LENGTH, 0 );
 if ($auth_result =~ /ismaster/) {
-my $getlog_data = 'binascii.a2b_hex("480000000200000000000000d40700000000000061646d696e2e24636d6400000000000100000021000000026765744c6f670010000000737461727475705761726e696e67730000")';
+my $getlog_data = hex2bin("480000000200000000000000d40700000000000061646d696e2e24636d6400000000000100000021000000026765744c6f670010000000737461727475705761726e696e67730000");
                
 my $log_result;
  $connect->recv($log_result, $BUFFER_LENGTH, 0 );
@@ -129,6 +129,24 @@ my $log_result;
 
 }
 
+}
+
+sub hex2bin {
+
+#my $hstr='3a000000a741000000000000d40700000000000061646d696e2e24636d640000000000ffffffff130000001069736d6173746572000100000000';
+my $hstr=shift;
+my $result;
+for (my $i = 0; 1; $i++) {
+           my $offset = 2 * $i;
+            if ($b = substr($hstr, $offset, 2)) {
+                $b = hex $b;
+                $b=sprintf "%b", $b;
+                $result.=$b;
+            } else {
+                last;
+            }
+}
+return  $result;
 }
 
 sub checkauth {
