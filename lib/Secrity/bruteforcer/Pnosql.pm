@@ -18,7 +18,7 @@ my @hosts = qw(
   192.168.1.6
 );
 
-my @usrs = qw();
+my @usrs = qw(root);
 
 my @pws = qw(
   '123456',    'admin',      'root',         'toor!@#',
@@ -44,7 +44,7 @@ for (@hosts) {
     if ($re) {
 
         my $auth = checkauth();
-        print $_, ":Find Mongodb Weak user password :$auth";
+        print $_, ":Find Redis Weak user password :$auth";
 
     }
 
@@ -70,9 +70,9 @@ sub checkport {
 
         $connect->recv( $auth_result, $BUFFER_LENGTH, 0 );
 
-        print "Unauthorized" if $auth_result =~ /$res/;
+        print "Unauthentication Server, YOU need to Security config for It！" if $auth_result =~ /$res/; #服务未启动认证，存在严重安全问题
 
-        return 1 if $auth_result =~ /Authentication/;
+        return 1 if $auth_result =~ /Authentication/; # 需要用户认证
 
     }
 
@@ -82,7 +82,7 @@ sub checkredis {
 
     my ( $host, $port, $timeout ) = @_;
 
-    my $comm = 'INFO\r\n';
+    my $comm = "INFO\r\n";
     my $res  = 'redis_version';
     return checkport( $host, $port, $timeout, $comm, $res );
 
@@ -92,7 +92,7 @@ sub checkmemcache {
 
     my ( $host, $port, $timeout ) = @_;
 
-    my $comm = 'stats\r\n';
+    my $comm = "stats\r\n";
     my $res  = 'version';
     return checkport( $host, $port, $timeout, $comm, $res );
 
