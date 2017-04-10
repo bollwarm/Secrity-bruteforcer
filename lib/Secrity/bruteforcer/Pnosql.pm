@@ -44,7 +44,7 @@ for (@hosts) {
     if ($re) {
 
         my $auth = checkauth();
-        print $_, ":Find Mysql Weak user password :$auth";
+        print $_, ":Find Mongodb Weak user password :$auth";
 
     }
 
@@ -70,7 +70,7 @@ sub checkport {
 
         $connect->recv( $auth_result, $BUFFER_LENGTH, 0 );
 
-        print "unauthorized" if $auth_result =~ /$res/;
+        print "Unauthorized" if $auth_result =~ /$res/;
 
         return 1 if $auth_result =~ /Authentication/;
 
