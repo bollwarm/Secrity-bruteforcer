@@ -40,6 +40,7 @@ for (@hosts) {
     #print "Connet to $_ =====================:\n";
     my $re = checkredis( $_, '6379', 2 );
     checkmemcache( $_, '11211', 2 );
+    checkZookeeper( $_, '2181', 2 );
     checkmongo( $_, '271017', 2 );
     if ($re) {
 
@@ -49,6 +50,7 @@ for (@hosts) {
     }
 
 }
+
 
 sub checkport {
 
@@ -84,6 +86,16 @@ sub checkredis {
 
     my $comm = "INFO\r\n";
     my $res  = 'redis_version';
+    return checkport( $host, $port, $timeout, $comm, $res );
+
+}
+
+sub checkZookeeper {
+
+    my ( $host, $port, $timeout ) = @_;
+
+    my $comm = "ENV";
+    my $res  = 'Environment';
     return checkport( $host, $port, $timeout, $comm, $res );
 
 }
