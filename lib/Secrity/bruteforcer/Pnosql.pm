@@ -10,12 +10,9 @@ our $VERSION = '0.01';
 my $DEBUG = 0;
 
 my @hosts = qw(
-  192.168.1.1
-  192.168.1.2
-  192.168.1.3
-  192.168.1.4
-  192.168.1.5
-  192.168.1.6
+192.168.1.1
+192.168.2.1
+10.2.12.40
 );
 
 my @usrs = qw(root);
@@ -35,14 +32,15 @@ my @pws = qw(
   'r00t',      'tomcat',     'apache',       'system'
 );
 
+
 for (@hosts) {
 
-    #print "Connet to $_ =====================:\n";
+    print "Connet to $_ =====================:\n";
     my $re = checkredis( $_, '6379', 2 );
     checkmemcache( $_, '11211', 2 );
     checkZookeeper( $_, '2181', 2 );
     checkmongo( $_, '271017', 2 );
-    if ($re) {
+ if ($re) {
 
         my $auth = checkauth();
         print $_, ":Find Redis Weak user password :$auth";
@@ -56,12 +54,13 @@ sub checkport {
 
     my ( $host, $port, $timeout, $comm, $res ) = @_;
 
+   print "Function checkport() begin check $host : $port \n" if $DEBUG;
     my $connect = IO::Socket::INET->new(
 
         PeerAddr => $host,
         PeerPort => $port,
         Proto    => 'tcp',
-        Timeout  => $timeout || 20,
+        Timeout  => $timeout || 10,
     ) or carp "Couldn't connect to $_:$port/tcp: $@";
 
     if ($connect) {
@@ -72,7 +71,7 @@ sub checkport {
 
         $connect->recv( $auth_result, $BUFFER_LENGTH, 0 );
 
-        print "Unauthentication Server, YOU need to Security config for It！" if $auth_result =~ /$res/; #服务未启动认证，存在严重安全问题
+        print "Unauthentication Server $host  Port $port, YOU need to Security config for It！\n" if $auth_result =~ /$res/; #服务未启动认证，存在严重安全问题
 
         return 1 if $auth_result =~ /Authentication/; # 需要用户认证
 
@@ -93,8 +92,8 @@ sub checkredis {
 sub checkZookeeper {
 
     my ( $host, $port, $timeout ) = @_;
-
-    my $comm = "ENV";
+    print "Function checkport() begin check $host : $port \n" if $DEBUG;
+    my $comm = "envi";
     my $res  = 'Environment';
     return checkport( $host, $port, $timeout, $comm, $res );
 
