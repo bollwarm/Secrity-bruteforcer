@@ -37,9 +37,13 @@ for (@hosts) {
 
     print "Connet to $_ =====================:\n";
     my $re = checkredis( $_, '6379', 2 );
+
     checkmemcache( $_, '11211', 2 );
+
     checkZookeeper( $_, '2181', 2 );
+
     checkmongo( $_, '271017', 2 );
+
  if ($re) {
 
         my $auth = checkauth();
@@ -93,7 +97,7 @@ sub checkZookeeper {
 
     my ( $host, $port, $timeout ) = @_;
     print "Function checkport() begin check $host : $port \n" if $DEBUG;
-    my $comm = "envi";
+    my $comm = 'envi';
     my $res  = 'Environment';
     return checkport( $host, $port, $timeout, $comm, $res );
 
