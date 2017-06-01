@@ -1,11 +1,11 @@
-package BMYSQL;
+package Secrity::bruteforcer::BMYSQL;
 
 use 5.004;
 use IO::Socket;
 use Carp;
 use vars qw($VERSION $DEBUG);
 use strict;
-$VERSION = '0.11';
+$VERSION = '0.01';
 
 use constant COMMAND_SLEEP          => "\x00";
 use constant COMMAND_QUIT           => "\x01";

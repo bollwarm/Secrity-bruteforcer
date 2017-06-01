@@ -1,57 +1,26 @@
-package Pnosql;
+package Secrity::bruteforcer::Pnosql;
 
 use 5.004;
 use IO::Socket;
 use Carp;
 use strict;
-use Data::Dumper;
-our $VERSION = '0.01';
+use warnings;
 
+our $VERSION = '0.01';
 my $DEBUG = 0;
 
-my @hosts = qw(
-192.168.1.1
-192.168.2.1
-10.2.12.40
-);
+our @ISA    = qw(Exporter);
+our @EXPORT = qw(checkredis checkmongo checkmemcache checkZookeeper);
 
-my @usrs = qw(root);
+=head1 NAME
 
-my @pws = qw(
-  '123456',    'admin',      'root',         'toor!@#',
-  'ftp',       'password',   '123123',       '123',
-  '1',         '{user}',     '{user}{user}', '{user}1',
-  '{user}123', '{user}2016', '{user}!@#',    '{user}2015',
-  '{user}!',   '',           'P@ssw0rd!!',   'qwa123',
-  '12345678',  'test',       '123qwe!@#',    '123456789',
-  '123321',    '1314520',    '666666',       'woaini',
-  'fuckyou',   '000000',     '1234567890',   '8888888',
-  'qwerty',    '1qaz2wsx',   'abc123',       'abc123456',
-  '1q2w3e4r',  '123qwe',     '159357',       'p@ssw0rd',
-  'p@55w0rd',  'password!',  'p@ssw0rd!',    'password1',
-  'r00t',      'tomcat',     'apache',       'system'
-);
+Secrity::bruteforcer::Pnosql - Check the vulnerability of nosql includding redis monogdb memcache zookeeper!
 
+=head1 VERSION
 
-for (@hosts) {
+Version 0.01
 
-    print "Connet to $_ =====================:\n";
-    my $re = checkredis( $_, '6379', 2 );
-
-    checkmemcache( $_, '11211', 2 );
-
-    checkZookeeper( $_, '2181', 2 );
-
-    checkmongo( $_, '271017', 2 );
-
- if ($re) {
-
-        my $auth = checkauth();
-        print $_, ":Find Redis Weak user password :$auth";
-
-    }
-
-}
+=cut
 
 
 sub checkport {
