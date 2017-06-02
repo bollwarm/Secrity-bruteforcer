@@ -20,25 +20,185 @@ our $VERSION = '0.01';
 =head1 SYNOPSIS
 
 
+my $hp = <<'HP'
+192.168.1.1 8080
+192.168.1.2 8080
+192.168.1.3 80
+HP
+;
 
-=head1 EXPORT
+my @hp=split /\n/sm,$hp;
+
+print $hp[0],"\n";
+print $hp[-1],"\n";
+
+my %hosts;
+
+for(@hp) {
+my ($h,$p)=split;
+$hosts{$h}=$p;
+
+}
+for(keys %hosts) {
+ print  tomcatV($_,$hosts{$_});
 
 
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
-
-=cut
-
-sub function1 {
 }
 
-=head2 function2
 
-=cut
 
-sub function2 {
+
+
+
+
+
+
+my $DEBUG = 0;
+
+my @hosts = qw(
+  192.168.1.1
+  192.168.1.2
+  192.168.1.3
+  192.168.1.4
+  192.168.1.5
+  192.168.1.6
+);
+
+my @usrs = ( 'root', 'test', 'mysql' )
+
+my @pws = (
+    '123456',    'admin',      'root',         'toor!@#',
+    'ftp',       'password',   '123123',       '123',
+    '1',         '{user}',     '{user}{user}', '{user}1',
+    '{user}123', '{user}2016', '{user}!@#',    '{user}2015',
+    '{user}!',   '',           'P@ssw0rd!!',   'qwa123',
+    '12345678',  'test',       '123qwe!@#',    '123456789',
+    '123321',    '1314520',    '666666',       'woaini',
+    'fuckyou',   '000000',     '1234567890',   '8888888',
+    'qwerty',    '1qaz2wsx',   'abc123',       'abc123456',
+    '1q2w3e4r',  '123qwe',     '159357',       'p@ssw0rd',
+    'p@55w0rd',  'password!',  'p@ssw0rd!',    'password1',
+    'r00t',      'tomcat',     'apache',       'system'
+);
+
+for (@hosts) {
+
+    #print "Connet to $_ =====================:\n";
+    my $re = mysql($_);
+
+    if ($re) {
+
+        print $_, ":Find Mysql Weak user password :$re";
+
+    }
 }
+
+
+
+
+
+
+ftp
+
+
+my @hosts = qw(
+
+  ftp.jaist.ac.jp
+  192.168.1.1
+  192.168.1.2
+  192.168.1.3
+  192.168.1.4
+  192.168.1.5
+  192.168.1.6
+);
+
+my @usrs =
+  ( 'ftp', 'www', 'admin', 'root', 'db', 'wwwroot', 'data', 'web', 'media' );
+my @pws = (
+    '123456',     'admin',        'root',       'ftp',
+    'password',   '123123',       '123',        '1',
+    '{user}',     '{user}{user}', '{user}1',    '{user}123',
+    '{user}2016', '{user}!@#',    '{user}2015', '{user}!',
+    '',           'P@ssw0rd!!',   'qwa123',     '12345678',
+    'test',       '123qwe!@#',    '123456789',  '123321',
+    '1314520',    '666666',       'woaini',     'fuckyou',
+    '000000',     '1234567890',   '8888888',    'qwerty',
+    '1qaz2wsx',   'abc123',       'abc123456',  '1q2w3e4r',
+    '123qwe',     '159357',       'p@ssw0rd',   'p@55w0rd',
+    'password!',  'p@ssw0rd!',    'password1',  'r00t',
+    'tomcat',     'apache',       'system'
+);
+
+
+for (@hosts) {
+
+    my $re = ftp($_);
+
+    if ($re) {
+        print $_, ": Anonymous opened! \n" if $re =~ /ftp/;
+        print $_, ": Weak user and password :$re ! \n";
+
+    }
+}
+
+
+
+
+nodql
+
+
+
+
+my @hosts = qw(
+192.168.1.1
+192.168.2.1
+10.2.12.40
+);
+
+my @usrs = qw(root);
+
+my @pws = qw(
+  '123456',    'admin',      'root',         'toor!@#',
+  'ftp',       'password',   '123123',       '123',
+  '1',         '{user}',     '{user}{user}', '{user}1',
+  '{user}123', '{user}2016', '{user}!@#',    '{user}2015',
+  '{user}!',   '',           'P@ssw0rd!!',   'qwa123',
+  '12345678',  'test',       '123qwe!@#',    '123456789',
+  '123321',    '1314520',    '666666',       'woaini',
+  'fuckyou',   '000000',     '1234567890',   '8888888',
+  'qwerty',    '1qaz2wsx',   'abc123',       'abc123456',
+  '1q2w3e4r',  '123qwe',     '159357',       'p@ssw0rd',
+  'p@55w0rd',  'password!',  'p@ssw0rd!',    'password1',
+  'r00t',      'tomcat',     'apache',       'system'
+);
+
+
+for (@hosts) {
+
+    print "Connet to $_ =====================:\n";
+    my $re = checkredis( $_, '6379', 2 );
+
+for (@hosts) {
+
+    print "Connet to $_ =====================:\n";
+    my $re = checkredis( $_, '6379', 2 );
+
+    checkmemcache( $_, '11211', 2 );
+
+    checkZookeeper( $_, '2181', 2 );
+
+    checkmongo( $_, '271017', 2 );
+
+ if ($re) {
+
+        my $auth = checkauth();
+        print $_, ":Find Redis Weak user password :$auth";
+
+    }
+
+}
+
+
 
 =head1 AUTHOR
 
