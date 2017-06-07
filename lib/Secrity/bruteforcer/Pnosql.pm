@@ -22,6 +22,7 @@ Version 0.01
 
 =cut
 
+my (@usrs,@pws);
 
 sub checkport {
 
@@ -43,10 +44,12 @@ sub checkport {
         my $auth_result;
 
         $connect->recv( $auth_result, $BUFFER_LENGTH, 0 );
-
-        print "Unauthentication Server $host  Port $port, YOU need to Security config for It！\n" if $auth_result =~ /$res/; #服务未启动认证，存在严重安全问题
-
-        return 1 if $auth_result =~ /Authentication/; # 需要用户认证
+        
+        if($auth_result =~ /$res/) {
+        print "\e[35;31;1mUnauth Server\e[0m $host Port $port:"; #服务未启动认证，存在严重安全问题
+        return $auth_result; 
+        }
+        #return 1 if $auth_result =~ /Authentication/; # 需要用户认证
 
     }
 
@@ -56,9 +59,15 @@ sub checkredis {
 
     my ( $host, $port, $timeout ) = @_;
 
-    my $comm = "INFO\r\n";
+    my $comm = "INFO\n";
     my $res  = 'redis_version';
-    return checkport( $host, $port, $timeout, $comm, $res );
+    my $result= checkport( $host, $port, $timeout, $comm, $res );
+    my $ver=$1 if $result=~/redis_version:(.*)\n/;
+    my   $os=$1 if $result=~/os:(.*)\n/;
+    my   $conf=$1 if $result=~/config_file:(.*)\n/;
+    print "Redis $ver\n";
+    print "Server os: $os\n";
+    print "conf files: $os\n";
 
 }
 
@@ -68,8 +77,11 @@ sub checkZookeeper {
     print "Function checkport() begin check $host : $port \n" if $DEBUG;
     my $comm = 'envi';
     my $res  = 'Environment';
-    return checkport( $host, $port, $timeout, $comm, $res );
-
+    my $result=checkport( $host, $port, $timeout, $comm, $res ); 
+    my $outer=$1 if $result=~/zookeeper.version=(.*)/;
+    print "zookeeper $outer \n";
+    
+    
 }
 
 sub checkmemcache {
@@ -120,7 +132,6 @@ sub checkmongo {
 
 sub hex2bin {
 
-#my $hstr='3a000000a741000000000000d40700000000000061646d696e2e24636d640000000000ffffffff130000001069736d6173746572000100000000';
     my $hstr = shift;
     my $result;
     for ( my $i = 0 ; 1 ; $i++ ) {
@@ -167,3 +178,4 @@ sub checkauth {
 
 }
 
+1;

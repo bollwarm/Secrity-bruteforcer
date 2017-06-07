@@ -1,5 +1,9 @@
 Revision history for Secrity-bruteforcer
 
+ 
+0.02    2017-06-07/17
+        扫描返回服务器信息，增加实例
+
 0.01    Date/time
         First version, released on an unsuspecting world.
 
