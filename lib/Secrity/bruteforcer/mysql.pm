@@ -1,6 +1,6 @@
 package Secrity::bruteforcer::mysql;
 
-use BMYSQL;
+use Secrity::bruteforcer::BMYSQL;
 use strict;
 use warnings;
 
