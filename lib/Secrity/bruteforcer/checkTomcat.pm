@@ -30,9 +30,9 @@ my($ip,$port)=@_;
 my $url='http://'.$ip.':'.$port.'/zzz';
 my $ua = LWP::UserAgent->new;
 $ua->agent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.124 Safari/537.36");
-#print $url,"\n";
+
 my $cont=$ua->get($url);
-#print  Dumper($cont);
+
 unless($cont->content eq "") {
 my $conts=$cont->content;
 my @cont=split /\n/,$conts;
