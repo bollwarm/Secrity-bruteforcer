@@ -22,7 +22,6 @@ Version 0.01
 
 =cut
 
-my (@usrs,@pws);
 
 sub checkport {
 

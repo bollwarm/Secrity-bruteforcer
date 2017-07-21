@@ -11,15 +11,16 @@ our @ISA    = qw(Exporter);
 our @EXPORT = qw(mysql);
 sub mysql {
 
-    my ($host) = @_;
+    my ($host,$user) = @_;
     my $result;
-
+    print "$host \n";
+    my (@usrs,@pws)=(@{$user->{user}},@{$user->{pass}});
     for (@usrs) {
         my $user = $_;
         for (@pws) {
             my $pwd = $_;
             $pwd =~ s/\{user\}/$user/g if /\{user\}/;
-
+            print "$user,$pwd \n";
             my $bmysql = BMYSQL->new(
                 hostname => $host,
                 debug    => $DEBUG,

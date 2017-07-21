@@ -3,7 +3,7 @@ package Secrity::bruteforcer;
 use 5.006;
 use strict;
 use warnings;
-
+require Exporter;
 =head1 NAME
 
 Secrity::bruteforcer - The great new Secrity::bruteforcer!
@@ -15,6 +15,53 @@ Version 0.01
 =cut
 
 our $VERSION = '0.01';
+
+our @ISA    = qw(Exporter);
+our @EXPORT = qw(config);
+
+my $dispatch_table ={
+mysqluser  => \&set_user,
+mysqlpassword => \&set_pass,
+};
+
+sub config{
+
+my $file=shift;
+return read_config($file,$dispatch_table);
+}
+
+sub read_config{
+
+  my ($filename, $actions) = @_;
+  my $user;
+  open my($CF), $filename or return; # Failure
+
+  while (<$CF>) {
+    chomp;
+    my ($directive, $rest) = split /\s+/, $_, 2;
+    if (exists $actions->{$directive}) {
+      $user->{$directive}=$actions->{$directive}->($rest);
+    } else {
+      die "Unrecognized directive $directive on line $. of $filename; aborting";
+    }
+  }
+  
+  return $user; # Success
+}
+
+sub set_user {
+
+my $user = shift;
+my @value= split /\|/,$user;
+return \@value;
+}
+
+sub set_pass {
+
+my $user = shift;
+my @value= split /\|/,$user;
+return \@value;
+}
 
 
 =head1 SYNOPSIS
