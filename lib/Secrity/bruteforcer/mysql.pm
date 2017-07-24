@@ -1,5 +1,4 @@
 package Secrity::bruteforcer::mysql;
-
 use Secrity::bruteforcer::BMYSQL;
 use strict;
 use warnings;
@@ -14,7 +13,9 @@ sub mysql {
     my ($host,$user) = @_;
     my $result;
     print "$host \n";
-    my (@usrs,@pws)=(@{$user->{user}},@{$user->{pass}});
+    my (@usrs,@pws);
+    push @usrs,$_  for(@{$user->{user}});
+    push @pws,$_  for(@{$user->{pass}});
     for (@usrs) {
         my $user = $_;
         for (@pws) {

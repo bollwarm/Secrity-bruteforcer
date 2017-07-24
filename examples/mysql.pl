@@ -1,5 +1,6 @@
 use Secrity::bruteforcer;
 use Secrity::bruteforcer::mysql;
+use Secrity::bruteforcer::BMYSQL;
 
 my (@hosts,$user,$pass);
 
@@ -27,7 +28,6 @@ my @hosts=qw(
 192.161.1.2
 192.161.1.3
 192.161.1.4
-
 );
 for(@hosts) {
  
