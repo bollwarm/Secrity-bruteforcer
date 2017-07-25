@@ -1,6 +1,5 @@
 use Secrity::bruteforcer;
 use Secrity::bruteforcer::mysql;
-use Secrity::bruteforcer::BMYSQL;
 
 my (@hosts,$user,$pass);
 
@@ -14,24 +13,22 @@ user => $user,
 pass => $pass,
 
 };
-=pod
-print $_,"\n" for(@{$userc->{user}});
-for(@{$userc->{pass}}) {
-s/^'//;
-s/'$//;
-print ;
-print "\n";
-}
-=cut
 my @hosts=qw(
 192.161.1.1
 192.161.1.2
 192.161.1.3
-192.161.1.4
 );
+
 for(@hosts) {
+
+print "Connet to $_ =====================:\n";
+
+my $re=mysql($_,$userc);
+
+if($re){
+
+print $_,":Find Mysql Weak user password :$re";
  
- mysql $_,$userc;
 
 }
-
+}

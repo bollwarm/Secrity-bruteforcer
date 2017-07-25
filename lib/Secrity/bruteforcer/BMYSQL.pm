@@ -5,6 +5,7 @@ use IO::Socket;
 use Carp;
 use vars qw($VERSION $DEBUG);
 use strict;
+
 $VERSION = '0.01';
 
 use constant COMMAND_SLEEP          => "\x00";
@@ -143,13 +144,13 @@ sub _get_server_information {
     my $message;
     $mysql->recv( $message, BUFFER_LENGTH, 0 );
     $self->_dump_packet($message)
-      if BMYSQL->debug;
+      if Secrity::bruteforcer::BMYSQL->debug;
     my $i = 0;
     my $packet_length = ord substr $message, $i, 1;
     $i += 4;
     $self->{protocol_version} = ord substr $message, $i, 1;
     printf "Protocol Version: %d\n", $self->{protocol_version}
-      if BMYSQL->debug;
+      if Secrity::bruteforcer::BMYSQL->debug;
 
     if ( $self->{protocol_version} == 10 ) {
         $self->{client_capabilities} = 1;
@@ -159,7 +160,7 @@ sub _get_server_information {
     my $string_end = index( $message, "\0", $i ) - $i;
     $self->{server_version} = substr $message, $i, $string_end;
     printf "Server Version: %s\n", $self->{server_version}
-      if BMYSQL->debug;
+      if Secrity::bruteforcer::BMYSQL->debug;
 
     $i += $string_end + 1;
     $self->{server_thread_id} = unpack 'v', substr $message, $i, 2;
@@ -179,7 +180,7 @@ sub _get_server_information {
     if ( length $message >= $i + 12 - 1 ) {
         $self->{salt} .= substr $message, $i, 12;
     }
-    printf "Salt: %s\n", $self->{salt} if BMYSQL->debug;
+    printf "Salt: %s\n", $self->{salt} if Secrity::bruteforcer::BMYSQL->debug;
 
 }
 
@@ -190,7 +191,7 @@ sub _request_authentication {
 
     my $auth_result;
     $mysql->recv( $auth_result, BUFFER_LENGTH, 0 );
-    $self->_dump_packet($auth_result) if BMYSQL->debug;
+    $self->_dump_packet($auth_result) if Secrity::bruteforcer::BMYSQL->debug;
     if ( $self->_is_error($auth_result) ) {
         $mysql->close;
         if ( length $auth_result < 7 ) {
@@ -203,7 +204,7 @@ sub _request_authentication {
         return 0;
     }
     $self->is_succect;
-    print "connect database\n" if BMYSQL->debug;
+    print "connect database\n" if Secrity::bruteforcer::BMYSQL->debug;
 
 }
 
@@ -215,13 +216,13 @@ sub _send_login_message {
       . "\x21\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
       . join "\0", $self->{user},
       "\x14"
-      . BMYSQL::Password->scramble( $self->{password}, $self->{salt},
+      . Secrity::bruteforcer::BMYSQL::Password->scramble( $self->{password}, $self->{salt},
         $self->{client_capabilities} );
     $body .= $self->{database};
     $body .= "\0";
     my $login_message = chr( length($body) - 3 ) . $body;
     $mysql->send( $login_message, 0 );
-    $self->_dump_packet($login_message) if BMYSQL->debug;
+    $self->_dump_packet($login_message) if Secrity::bruteforcer::BMYSQL->debug;
 }
 
 sub _execute_command {
@@ -232,11 +233,11 @@ sub _execute_command {
 
     my $message = pack( 'V', length($sql) + 1 ) . $command . $sql;
     $mysql->send( $message, 0 );
-    $self->_dump_packet($message) if BMYSQL->debug;
+    $self->_dump_packet($message) if Secrity::bruteforcer::BMYSQL->debug;
 
     my $result;
     $mysql->recv( $result, BUFFER_LENGTH, 0 );
-    $self->_dump_packet($result) if BMYSQL->debug;
+    $self->_dump_packet($result) if Secrity::bruteforcer::BMYSQL->debug;
     $self->_reset_status;
 
     if ( $self->_is_error($result) ) {
@@ -318,7 +319,7 @@ sub _dump_packet {
     #warn $str;
 }
 
-package BMYSQL::Password;
+package Secrity::bruteforcer::BMYSQL::Password;
 use strict;
 use Digest::SHA1;
 
@@ -365,7 +366,7 @@ sub _my_crypt {
     return $result;
 }
 
-package BMYSQL::Password32;
+package Secrity::bruteforcer::BMYSQL::Password32;
 use strict;
 
 sub scramble {

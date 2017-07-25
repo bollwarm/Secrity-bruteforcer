@@ -23,6 +23,7 @@ Version 0.01
 =cut
 
 my (@usrs,@pws);
+
 sub checkport {
 
     my ( $host, $port, $timeout, $comm, $res ) = @_;
@@ -61,13 +62,14 @@ sub checkredis {
     my $comm = "INFO\n";
     my $res  = 'redis_version';
     my $result= checkport( $host, $port, $timeout, $comm, $res );
+    if($result) {
     my $ver=$1 if $result=~/redis_version:(.*)\n/;
     my   $os=$1 if $result=~/os:(.*)\n/;
     my   $conf=$1 if $result=~/config_file:(.*)\n/;
     print "Redis $ver\n";
     print "Server os: $os\n";
     print "conf files: $os\n";
-
+    }
 }
 
 sub checkZookeeper {
@@ -77,9 +79,10 @@ sub checkZookeeper {
     my $comm = 'envi';
     my $res  = 'Environment';
     my $result=checkport( $host, $port, $timeout, $comm, $res ); 
+    if($result) {
     my $outer=$1 if $result=~/zookeeper.version=(.*)/;
     print "zookeeper $outer \n";
-    
+    }
     
 }
 

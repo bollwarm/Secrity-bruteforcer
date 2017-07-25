@@ -1,4 +1,5 @@
 package Secrity::bruteforcer::mysql;
+
 use Secrity::bruteforcer::BMYSQL;
 use strict;
 use warnings;
@@ -6,13 +7,13 @@ use warnings;
 our $VERSION = '0.01';
 my $DEBUG = 0;
 
+
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(mysql);
 sub mysql {
 
     my ($host,$user) = @_;
     my $result;
-    print "$host \n";
     my (@usrs,@pws);
     push @usrs,$_  for(@{$user->{user}});
     push @pws,$_  for(@{$user->{pass}});
@@ -21,10 +22,10 @@ sub mysql {
         for (@pws) {
             my $pwd = $_;
             $pwd =~ s/\{user\}/$user/g if /\{user\}/;
-            print "$user,$pwd \n";
-            my $bmysql = BMYSQL->new(
+            my $bmysql = Secrity::bruteforcer::BMYSQL->new(
                 hostname => $host,
                 debug    => $DEBUG,
+                timeout  => 5,
             ) or return;
 
             $bmysql->login( $user, $pwd );
